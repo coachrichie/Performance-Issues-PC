@@ -1,0 +1,20 @@
+{
+  "Stress": {
+    "CpuDurationSeconds": 600,
+    "GpuDurationSeconds": 600,
+    "SampleIntervalSeconds": 5,
+    "WarningTemperatureC": 85,
+    "AbortTemperatureC": 95
+  },
+  "Network": {
+    "AutoPacketCapture": false
+  },
+  "Paths": {
+    "ReportsRoot": "Reports",
+    "LogsRoot": "Logs",
+    "RawRoot": "Raw"
+  },
+  "Safety": {
+    "AllowUnsupportedInstallerAutoStart": false
+  }
+}

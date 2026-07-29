@@ -1,0 +1,94 @@
+{
+  "Tools": [
+    {
+      "Name": "CPU-Z",
+      "SourceFile": "cpu-z_2.18-en.exe",
+      "Sha256": "9FEC610E6EA575101FFD12291BCA3F6364906CA4773096FD0C6802E2A5FEDAC0",
+      "Purpose": "CPU and motherboard identification",
+      "InstallArguments": [ "/S" ],
+      "ExecutableHints": [ "cpuz.exe", "cpuz_x64.exe" ],
+      "AutoInstall": true
+    },
+    {
+      "Name": "GPU-Z",
+      "SourceFile": "GPU-Z - CHIP Installer _tWjyv.exe",
+      "Sha256": "",
+      "Purpose": "GPU identification and telemetry",
+      "InstallArguments": [ "/VERYSILENT" ],
+      "ExecutableHints": [ "GPU-Z.exe" ],
+      "AutoInstall": false
+    },
+    {
+      "Name": "PCMark 10",
+      "SourceFile": "PCMark10-v2-2-2737.zip",
+      "Sha256": "8368E6C6D68AA5ADD2B09CB71885587D472E904CDB082E3381E7811116BFB948",
+      "Purpose": "Overall system benchmarking",
+      "InstallArguments": [ "/quiet" ],
+      "ExecutableHints": [ "pcmark10.exe" ],
+      "AutoInstall": false
+    },
+    {
+      "Name": "Prime95",
+      "SourceFile": "Prime95 - CHIP Installer _i0jyv.exe",
+      "Sha256": "",
+      "Purpose": "CPU stress testing",
+      "InstallArguments": [],
+      "ExecutableHints": [ "prime95.exe" ],
+      "AutoInstall": false
+    },
+    {
+      "Name": "Process Monitor",
+      "SourceFile": "ProcessMonitor.zip",
+      "Sha256": "D4ED579FDC1957FDE0124DD41EFD8D72AF0529254984BFA5A3864ECD8B539252",
+      "Purpose": "System process and file activity tracing",
+      "InstallArguments": [],
+      "ExecutableHints": [ "Procmon64.exe", "Procmon.exe" ],
+      "AutoInstall": false
+    },
+    {
+      "Name": "TreeSize Free",
+      "SourceFile": "TreeSizeFreeSetup.exe",
+      "Sha256": "D800F1765539194A088CD06B2B8A73C40C4A1001425F2A892F495A53DB9DA2DE",
+      "Purpose": "Storage usage inspection",
+      "InstallArguments": [ "/S" ],
+      "ExecutableHints": [ "TreeSizeFree.exe" ],
+      "AutoInstall": true
+    },
+    {
+      "Name": "Unigine Heaven",
+      "SourceFile": "Unigine_Heaven-4.0.exe",
+      "Sha256": "497865A09AF205A7D2E8812BFC2DD54870216CC1E95541B63CEF89A4433B0E5F",
+      "Purpose": "GPU stress testing",
+      "InstallArguments": [ "/silent" ],
+      "ExecutableHints": [ "Heaven.exe" ],
+      "AutoInstall": true
+    },
+    {
+      "Name": "WiFi Analyzer",
+      "SourceFile": "WiFi Analyzer Installer.exe",
+      "Sha256": "3A49C1BEA0D2028868A28CC1730593B3C1353A5CFA09E9BB6FB1CFA6AE699E19",
+      "Purpose": "Wireless network inspection",
+      "InstallArguments": [ "/quiet" ],
+      "ExecutableHints": [ "wifi-analyzer.exe" ],
+      "AutoInstall": false
+    },
+    {
+      "Name": "WinfrGUI",
+      "SourceFile": "WinfrGUI_Setup.exe",
+      "Sha256": "6F389357E3248947D86C8FF6F83855775C427BFB34E8652B7384CF559529B6F6",
+      "Purpose": "Windows file recovery front end",
+      "InstallArguments": [ "/S" ],
+      "ExecutableHints": [ "WinfrGUI.exe" ],
+      "AutoInstall": false
+    },
+    {
+      "Name": "Wireshark",
+      "SourceFile": "Wireshark-4.6.3-x64.exe",
+      "Sha256": "09DB2E7365B8DC56BC293B5E2849D9D06EBD8411F5A5E72E528964FBB051F283",
+      "Purpose": "Network inspection without automatic packet capture",
+      "InstallArguments": [ "/S" ],
+      "ExecutableHints": [ "wireshark.exe", "tshark.exe" ],
+      "AutoInstall": true
+    }
+  ]
+}

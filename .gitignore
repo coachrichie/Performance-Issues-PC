@@ -1,0 +1,22 @@
+# Runtime output
+Reports/
+Logs/
+Raw/
+
+# Local installer payloads
+Installers/*.exe
+Installers/*.zip
+Installers/*.msi
+Installers/*.msix
+
+# Documentation build artifacts
+docx-qa/
+docx-tmp/
+docx-a11y.json
+
+# Python / PowerShell cache
+__pycache__/
+*.pyc
+
+# Local planning metadata
+.superpowers/
