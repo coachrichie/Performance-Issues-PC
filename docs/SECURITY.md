@@ -11,6 +11,7 @@ This toolkit is intentionally conservative. It is designed for diagnostics, not 
 - No driver tuning
 - No automatic uninstall or cleanup tools
 - No automatic packet capture
+- No silent bypass of Windows UAC
 
 ## Sensitive Data Handling
 
@@ -25,9 +26,26 @@ Collected artifacts may contain:
 
 Review reports before sharing them publicly.
 
+This also applies to:
+
+- `Records.csv`
+- `Rohbewertung.html`
+- `Run.zip`
+- imported benchmark exports
+
 ## Trusted Tooling
 
 Only allowlisted tools should be added to the automation workflow. Third-party wrappers, downloader stubs, or ad-supported installers should stay excluded.
+
+## Trusted Automation Scope
+
+Approved automation is limited to:
+
+- diagnostics collection
+- bounded benchmark handling
+- support-tool log collection
+- report generation
+- distribution-folder generation
 
 ## Reporting A Security Concern
 

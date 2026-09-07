@@ -6,9 +6,12 @@ The format is based on Keep a Changelog and this project uses Semantic Versionin
 
 ## [Unreleased]
 
-- Repository structure prepared for GitHub publication
-- Documentation expanded for installation, usage, diagnostics, and security
-- GitHub workflow and community health files added
+- Support-tool integration expanded for CrystalDiskInfo, Autoruns, and Process Explorer
+- Reporting finalized with Abschlussbericht, Rohbewertung, CSV, and ZIP outputs
+- Customer and GitHub distribution automation added
+- Installation, usage, diagnostics, security, distribution, GitHub, and operating manuals expanded
+- GitHub workflow updated to validate benchmark references and distribution generation
+- Word documentation regenerated from the updated build script
 
 ## [0.1.0] - 2026-07-28
 

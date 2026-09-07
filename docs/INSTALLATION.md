@@ -2,40 +2,65 @@
 
 ## Purpose
 
-This repository packages a portable Windows performance diagnostics toolkit. The repository itself does not include large installer binaries on GitHub. Local operators place approved binaries into `Installers/` before running installation automation.
+This repository packages a portable Windows performance diagnostics toolkit for IT support triage. The preferred deployment model is a copied folder on the target PC plus one guided entry point: `Performance Test.cmd`.
 
 ## Requirements
 
 - Windows 10 or Windows 11 x64
 - PowerShell 5.1 or newer
-- Administrative shell for installer execution when needed
-- Enough free disk space for reports and raw logs
+- Local administrator approval when installations or privileged queries are needed
+- Enough free disk space for reports, raw logs, and optional benchmark exports
 
-## Repository Setup
+## Preferred Setup
 
-1. Clone or copy the repository to a local folder.
-2. Place approved tool installers into `Installers/`.
-3. Review `Config/tools.json` and `Config/diagnostics.json`.
-4. Open PowerShell as Administrator if tool installation is planned.
+1. Copy or clone the repository to a local folder.
+2. Place approved support tools into `ToolkitPrograms\AutoInstall\`.
+3. Place optional/manual tools into `ToolkitPrograms\Optional\`.
+4. Review `Config\tools.json`, `Config\diagnostics.json`, and `Config\benchmark-references.json`.
+5. Start `Performance Test.cmd` or run a dry-run first.
 
-## Supported Local Payloads
+## Recommended Folder Preparation For Customer Use
 
-The current repository structure expects filenames that match the tool manifest in `Config/tools.json`.
+Preferred staging:
+
+- `ToolkitPrograms\AutoInstall\`
+- `ToolkitPrograms\Optional\`
+
+Recommended examples:
+
+- CPU-Z
+- TreeSize Free
+- Unigine Heaven
+- Wireshark
+- CrystalDiskInfo
+- Autoruns
+- Process Explorer
+
+## Legacy Fallback
+
+If a file is not found in `ToolkitPrograms\AutoInstall\`, the toolkit still checks the older `Installers\` folder.
+
+## Typical Approved Payloads
+
+Expected filenames are defined in `Config\tools.json`. Current examples include:
 
 - `cpu-z_2.18-en.exe`
 - `TreeSizeFreeSetup.exe`
 - `Unigine_Heaven-4.0.exe`
 - `Wireshark-4.6.3-x64.exe`
-- Optional ZIP payloads and additional manual tools listed in the manifest
+- `CrystalDiskInfo.zip`
+- `Autoruns.zip`
+- `ProcessExplorer.zip`
 
 ## First Validation
 
 ```powershell
 Invoke-Pester -Script .\Tests -PassThru
-.\Start-Diagnose.ps1 -DryRun -OutputRoot .\FirstValidationOutput
+.\Start-Diagnose.ps1 -DryRun -InstallTools -RunStressTests -RunBenchmarks -RunSupportTools -OutputRoot .\FirstValidationOutput
+.\Create-Distributions.ps1
 ```
 
-## What Is Deliberately Excluded
+## Deliberately Excluded
 
 - Automatic admin password handling
 - Automatic cleanup or repair tools
@@ -44,4 +69,9 @@ Invoke-Pester -Script .\Tests -PassThru
 
 ## Output Root Behavior
 
-The toolkit creates `Reports`, `Logs`, and `Raw` beneath the path passed to `-OutputRoot`. For example, `-OutputRoot .\FirstValidationOutput` produces results under `.\FirstValidationOutput\Reports\`.
+The toolkit creates `Reports`, `Logs`, and `Raw` beneath the path passed to `-OutputRoot`. Each run generates a timestamped run folder and normally produces:
+
+- `Abschlussbericht.html`
+- `Rohbewertung.html`
+- `Records.csv`
+- `Run.zip`

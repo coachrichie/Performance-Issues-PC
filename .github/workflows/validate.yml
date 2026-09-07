@@ -17,6 +17,7 @@ jobs:
         run: |
           Get-Content .\Config\diagnostics.json -Raw | ConvertFrom-Json | Out-Null
           Get-Content .\Config\tools.json -Raw | ConvertFrom-Json | Out-Null
+          Get-Content .\Config\benchmark-references.json -Raw | ConvertFrom-Json | Out-Null
 
       - name: Install Pester 3.4.0
         shell: powershell
@@ -26,9 +27,14 @@ jobs:
       - name: Run test suite
         shell: powershell
         run: |
-          Invoke-Pester -Script .\Tests -PassThru
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Invoke-Pester -Script .\Tests -PassThru"
 
       - name: Run dry diagnostics
         shell: powershell
         run: |
-          .\Start-Diagnose.ps1 -DryRun -OutputRoot "$env:RUNNER_TEMP\ToolkitOutput"
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Start-Diagnose.ps1 -DryRun -InstallTools -RunStressTests -RunBenchmarks -RunSupportTools -OutputRoot "$env:RUNNER_TEMP\ToolkitOutput"
+
+      - name: Build distribution folders
+        shell: powershell
+        run: |
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Create-Distributions.ps1

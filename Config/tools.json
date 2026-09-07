@@ -38,12 +38,13 @@
     },
     {
       "Name": "Process Monitor",
-      "SourceFile": "ProcessMonitor.zip",
+      "SourceFile": "Procmon.exe",
       "Sha256": "D4ED579FDC1957FDE0124DD41EFD8D72AF0529254984BFA5A3864ECD8B539252",
-      "Purpose": "System process and file activity tracing",
+      "Purpose": "Deep process, file, and registry tracing for manual support triage",
       "InstallArguments": [],
       "ExecutableHints": [ "Procmon64.exe", "Procmon.exe" ],
-      "AutoInstall": false
+      "InstallMode": "Portable",
+      "AutoInstall": true
     },
     {
       "Name": "TreeSize Free",
@@ -52,7 +53,7 @@
       "Purpose": "Storage usage inspection",
       "InstallArguments": [ "/S" ],
       "ExecutableHints": [ "TreeSizeFree.exe" ],
-      "AutoInstall": true
+      "AutoInstall": false
     },
     {
       "Name": "Unigine Heaven",
@@ -82,13 +83,60 @@
       "AutoInstall": false
     },
     {
+      "Name": "CrystalDiskInfo",
+      "SourceFile": "CrystalDiskInfo9_9_2.exe",
+      "Sha256": "",
+      "Purpose": "SMART and SSD/HDD health inspection",
+      "InstallArguments": [ "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/SP-" ],
+      "ExecutableHints": [ "DiskInfo64.exe", "DiskInfo32.exe", "DiskInfo.exe" ],
+      "AutoInstall": true
+    },
+    {
+      "Name": "Autoruns",
+      "SourceFile": "Autoruns64a.exe",
+      "Sha256": "",
+      "Purpose": "Autostart analysis and startup triage; GUI variant supports manual review",
+      "InstallArguments": [],
+      "ExecutableHints": [ "Autorunsc64.exe", "Autorunsc.exe", "Autoruns64a.exe", "Autoruns64.exe", "Autoruns.exe" ],
+      "InstallMode": "Portable",
+      "AutoInstall": true
+    },
+    {
+      "Name": "ProcessExplorer",
+      "SourceFile": "procexp.exe",
+      "Sha256": "",
+      "Purpose": "Interactive deep process inspection",
+      "InstallArguments": [],
+      "ExecutableHints": [ "procexp64.exe", "procexp.exe" ],
+      "InstallMode": "Portable",
+      "AutoInstall": true
+    },
+    {
+      "Name": "HWiNFO",
+      "SourceFile": "hwi_834x.exe",
+      "Sha256": "",
+      "Purpose": "Detailed hardware and sensor diagnostics for manual follow-up",
+      "InstallArguments": [],
+      "ExecutableHints": [ "HWiNFO64.EXE", "HWiNFO32.EXE" ],
+      "AutoInstall": false
+    },
+    {
+      "Name": "HWMonitor",
+      "SourceFile": "hwmonitor_1.60.exe",
+      "Sha256": "",
+      "Purpose": "Quick temperature and voltage spot-checking for manual follow-up",
+      "InstallArguments": [],
+      "ExecutableHints": [ "HWMonitor.exe", "HWMonitor_x64.exe" ],
+      "AutoInstall": false
+    },
+    {
       "Name": "Wireshark",
       "SourceFile": "Wireshark-4.6.3-x64.exe",
       "Sha256": "09DB2E7365B8DC56BC293B5E2849D9D06EBD8411F5A5E72E528964FBB051F283",
       "Purpose": "Network inspection without automatic packet capture",
       "InstallArguments": [ "/S" ],
       "ExecutableHints": [ "wireshark.exe", "tshark.exe" ],
-      "AutoInstall": true
+      "AutoInstall": false
     }
   ]
 }

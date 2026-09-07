@@ -152,3 +152,15 @@ function Get-ConfiguredThresholds {
 
     Get-Content -LiteralPath $configPath -Raw | ConvertFrom-Json
 }
+
+function Get-BenchmarkReferences {
+    [CmdletBinding()]
+    param()
+
+    $configPath = Join-Path (Get-ProjectRoot) 'Config\benchmark-references.json'
+    if (-not (Test-Path -LiteralPath $configPath)) {
+        throw "Benchmark reference file not found: $configPath"
+    }
+
+    Get-Content -LiteralPath $configPath -Raw | ConvertFrom-Json
+}

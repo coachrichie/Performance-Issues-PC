@@ -36,7 +36,8 @@ Summarize any obvious anomalies you already noticed.
 ## Attached Evidence
 
 - Records.csv
-- Report.html
+- Abschlussbericht.html
+- Rohbewertung.html
 - Additional Windows logs or screenshots
 
 ## Privacy Check

@@ -2,12 +2,24 @@
 Reports/
 Logs/
 Raw/
+Distributions/
 
 # Local installer payloads
 Installers/*.exe
 Installers/*.zip
 Installers/*.msi
 Installers/*.msix
+ToolkitPrograms/AutoInstall/*.exe
+ToolkitPrograms/AutoInstall/*.zip
+ToolkitPrograms/AutoInstall/*.msi
+ToolkitPrograms/AutoInstall/*.msix
+ToolkitPrograms/Optional/*.exe
+ToolkitPrograms/Optional/*.zip
+ToolkitPrograms/Optional/*.msi
+ToolkitPrograms/Optional/*.msix
+ToolkitPrograms/Installed/
+BenchmarkImports/PCMark10/
+BenchmarkImports/UnigineHeaven/
 
 # Documentation build artifacts
 docx-qa/

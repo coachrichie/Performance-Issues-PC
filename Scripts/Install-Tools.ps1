@@ -57,8 +57,15 @@ function Resolve-InstallerSourcePath {
         [string]$SourceFile
     )
 
-    $installersRoot = Resolve-ProjectPath -Path 'Installers' -AllowMissing
-    return Resolve-ProjectPath -Path $SourceFile -BasePath $installersRoot -AllowMissing
+    $preferredRoot = Resolve-ProjectPath -Path 'ToolkitPrograms\AutoInstall' -AllowMissing
+    $fallbackRoot = Resolve-ProjectPath -Path 'Installers' -AllowMissing
+
+    $preferredPath = Resolve-ProjectPath -Path $SourceFile -BasePath $preferredRoot -AllowMissing
+    if (Test-Path -LiteralPath $preferredPath) {
+        return $preferredPath
+    }
+
+    return Resolve-ProjectPath -Path $SourceFile -BasePath $fallbackRoot -AllowMissing
 }
 
 function New-InstallerResult {
@@ -97,7 +104,15 @@ function New-InstallerResult {
     }
 
     [pscustomobject]@{
+        RunId = ''
+        Timestamp = (Get-Date).ToString('o')
+        Category = 'Installer'
         Name = [string]$Tool.Name
+        Value = $Status
+        Unit = ''
+        Severity = if ($Status -eq 'Error') { 'Error' } elseif ($Status -eq 'Warning') { 'Warning' } else { 'Info' }
+        Source = 'Install-Tools.ps1'
+        Message = if ($Error) { $Error } elseif ($SourcePath) { "Source: $SourcePath" } else { '' }
         SourceFile = [string]$Tool.SourceFile
         SourcePath = $SourcePath
         Status = $Status
@@ -107,6 +122,28 @@ function New-InstallerResult {
         Error = $Error
         InstallArguments = [object]$arguments
     }
+}
+
+function Get-InstalledToolsRoot {
+    [CmdletBinding()]
+    param()
+
+    $root = Resolve-ProjectPath -Path 'ToolkitPrograms\Installed' -AllowMissing
+    if (-not (Test-Path -LiteralPath $root)) {
+        New-Item -ItemType Directory -Path $root -Force | Out-Null
+    }
+
+    return $root
+}
+
+function Get-SafeToolDirectoryName {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Name
+    )
+
+    return ($Name -replace '[^A-Za-z0-9]+', '')
 }
 
 function Get-AllowlistedTools {
@@ -129,6 +166,20 @@ function Get-AllowlistedTools {
 
         $tool
     }
+}
+
+function Get-InstallMode {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [psobject]$Tool
+    )
+
+    if ($Tool.PSObject.Properties['InstallMode'] -and -not [string]::IsNullOrWhiteSpace([string]$Tool.InstallMode)) {
+        return [string]$Tool.InstallMode
+    }
+
+    return 'Installer'
 }
 
 function Install-AllowlistedTools {
@@ -160,6 +211,7 @@ function Install-AllowlistedTools {
             }
             else {
                 $sourcePath = Resolve-InstallerSourcePath -SourceFile $tool.SourceFile
+                $installMode = Get-InstallMode -Tool $tool
 
                 if (-not (Test-Path -LiteralPath $sourcePath)) {
                     $status = 'Error'
@@ -167,6 +219,18 @@ function Install-AllowlistedTools {
                 }
                 elseif ($DryRun) {
                     $status = 'DryRun'
+                }
+                elseif ($installMode -eq 'Portable') {
+                    $status = 'Prepared'
+                }
+                elseif ([System.IO.Path]::GetExtension($sourcePath) -ieq '.zip') {
+                    $destinationRoot = Join-Path (Get-InstalledToolsRoot) (Get-SafeToolDirectoryName -Name $tool.Name)
+                    if (Test-Path -LiteralPath $destinationRoot) {
+                        Remove-Item -LiteralPath $destinationRoot -Recurse -Force
+                    }
+                    New-Item -ItemType Directory -Path $destinationRoot -Force | Out-Null
+                    Expand-Archive -LiteralPath $sourcePath -DestinationPath $destinationRoot -Force
+                    $status = 'Installed'
                 }
                 else {
                     $process = Start-Process -FilePath $sourcePath -ArgumentList $tool.InstallArguments -Wait -PassThru

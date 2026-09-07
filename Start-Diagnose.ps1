@@ -2,6 +2,8 @@
 param(
     [switch]$InstallTools,
     [switch]$RunStressTests,
+    [switch]$RunBenchmarks,
+    [switch]$RunSupportTools,
     [switch]$DryRun,
     [string]$OutputRoot = $PSScriptRoot
 )
@@ -12,8 +14,12 @@ $scriptRoot = Split-Path -Parent $PSScriptRoot
 . "$PSScriptRoot\Scripts\Collect-Windows.ps1"
 . "$PSScriptRoot\Scripts\Collect-Storage.ps1"
 . "$PSScriptRoot\Scripts\Collect-Network.ps1"
+. "$PSScriptRoot\Scripts\Collect-Benchmarks.ps1"
+. "$PSScriptRoot\Scripts\Run-Benchmarks.ps1"
+. "$PSScriptRoot\Scripts\Collect-SupportTools.ps1"
 . "$PSScriptRoot\Scripts\Collect-Sensors.ps1"
 . "$PSScriptRoot\Scripts\Run-StressTests.ps1"
+. "$PSScriptRoot\Scripts\Compare-Benchmarks.ps1"
 . "$PSScriptRoot\Scripts\Build-Report.ps1"
 
 Set-StrictMode -Version Latest
@@ -33,6 +39,15 @@ try {
     & $addRecords (Collect-Windows -RunContext $runContext -DryRun:$DryRun)
     & $addRecords (Collect-Storage -RunContext $runContext -DryRun:$DryRun)
     & $addRecords (Collect-Network -RunContext $runContext -DryRun:$DryRun)
+    & $addRecords (Sync-BenchmarkImports -RunContext $runContext -DryRun:$DryRun)
+    if ($RunBenchmarks) {
+        & $addRecords (Invoke-ConfiguredBenchmarks -RunContext $runContext -DryRun:$DryRun)
+        & $addRecords (Sync-BenchmarkImports -RunContext $runContext -DryRun:$DryRun)
+    }
+    & $addRecords (Collect-Benchmarks -RunContext $runContext -DryRun:$DryRun)
+    if ($RunSupportTools) {
+        & $addRecords (Invoke-SupportTools -RunContext $runContext -DryRun:$DryRun)
+    }
     & $addRecords (Get-SensorSnapshot -RunContext $runContext)
 
     if ($RunStressTests) {
@@ -48,13 +63,16 @@ try {
         Write-DiagnosticRecord -RunContext $runContext -Category 'Launcher' -Name 'DryRun' -Value $true -Severity 'Info' -Source 'Start-Diagnose.ps1' -Message 'Dry run requested' | Out-Null
     }
 
+    & $addRecords (Compare-BenchmarkRecords -RunContext $runContext -Records @($records))
+
     if (-not $thresholds) {
         throw 'Failed to load configuration.'
     }
 
     & $addRecords (Write-DiagnosticRecord -RunContext $runContext -Category 'Launcher' -Name 'Completed' -Value 'OK' -Source 'Start-Diagnose.ps1')
     $result = Build-DiagnosticReport -RunContext $runContext -Records @($records)
-    Write-Output "HTML: $($result.HtmlPath)"
+    Write-Output "Summary HTML: $($result.SummaryHtmlPath)"
+    Write-Output "Raw HTML:     $($result.RawHtmlPath)"
     Write-Output "CSV:  $($result.CsvPath)"
     Write-Output "ZIP:  $($result.ZipPath)"
     exit 0

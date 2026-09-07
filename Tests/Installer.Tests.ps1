@@ -25,15 +25,17 @@ Describe 'allowlisted installer execution' {
     BeforeAll {
         $script:ProjectRoot = Split-Path -Parent $PSScriptRoot
         $script:InstallerRoot = Join-Path $script:ProjectRoot 'Installers'
+        $script:PreferredInstallerRoot = Join-Path $script:ProjectRoot 'ToolkitPrograms\AutoInstall'
         $script:FixtureRoot = Join-Path $PSScriptRoot 'fixtures'
         $script:FixtureOutputRoot = Join-Path $PSScriptRoot 'TestOutput'
         $script:FixtureRunId = [Guid]::NewGuid().ToString()
         $script:InstallerFixtureRelativeRoot = Join-Path 'PesterFixtures' $script:FixtureRunId
         $script:InstallerFixtureRoot = Join-Path $script:InstallerRoot $script:InstallerFixtureRelativeRoot
+        $script:PreferredInstallerFixtureRoot = Join-Path $script:PreferredInstallerRoot $script:InstallerFixtureRelativeRoot
         $script:ManifestFixtureRoot = Join-Path $script:FixtureRoot $script:FixtureRunId
         $script:OutputFixtureRoot = Join-Path $script:FixtureOutputRoot $script:FixtureRunId
 
-        foreach ($path in @($script:InstallerRoot, $script:FixtureRoot, $script:FixtureOutputRoot, $script:InstallerFixtureRoot, $script:ManifestFixtureRoot, $script:OutputFixtureRoot)) {
+        foreach ($path in @($script:InstallerRoot, $script:PreferredInstallerRoot, $script:FixtureRoot, $script:FixtureOutputRoot, $script:InstallerFixtureRoot, $script:PreferredInstallerFixtureRoot, $script:ManifestFixtureRoot, $script:OutputFixtureRoot)) {
             New-Item -ItemType Directory -Path $path -Force | Out-Null
         }
 
@@ -44,7 +46,7 @@ Describe 'allowlisted installer execution' {
     }
 
     AfterAll {
-        foreach ($path in @($script:InstallerFixtureRoot, $script:ManifestFixtureRoot, $script:OutputFixtureRoot)) {
+        foreach ($path in @($script:InstallerFixtureRoot, $script:PreferredInstallerFixtureRoot, $script:ManifestFixtureRoot, $script:OutputFixtureRoot)) {
             if (Test-Path -LiteralPath $path) {
                 Remove-Item -LiteralPath $path -Recurse -Force
             }
@@ -124,6 +126,7 @@ Describe 'allowlisted installer execution' {
         @($result | Where-Object { -not $_.StartedAt -or -not $_.EndedAt }).Count | Should Be 0
         @($result | Where-Object { $_.ExitCode -ne $null }).Count | Should Be 0
         @($result | Where-Object { $_.Error }).Count | Should Be 0
+        @($result | Select-Object -ExpandProperty Category | Sort-Object -Unique) | Should Be @('Installer')
     }
 
     It 'returns an error record when a source path escapes the project root' {
@@ -178,5 +181,44 @@ Describe 'allowlisted installer execution' {
         @($result).Count | Should Be 1
         $result[0].Status | Should Be 'Error'
         $result[0].Error | Should Match 'not found'
+    }
+
+    It 'prefers ToolkitPrograms AutoInstall over the legacy Installers folder' {
+        $manifestPath = Join-Path $script:ManifestFixtureRoot 'preferred-root.json'
+        $relativeFile = Join-Path $script:InstallerFixtureRelativeRoot 'preferred-tool.exe'
+        Set-Content -LiteralPath (Join-Path $script:InstallerFixtureRoot 'preferred-tool.exe') -Value 'legacy copy' -Encoding UTF8
+        Set-Content -LiteralPath (Join-Path $script:PreferredInstallerFixtureRoot 'preferred-tool.exe') -Value 'preferred copy' -Encoding UTF8
+
+        New-TestManifest -Path $manifestPath -Tools @(
+            @{
+                Name = 'PreferredTool'
+                SourceFile = $relativeFile
+                InstallArguments = @('/S')
+                AutoInstall = $true
+            }
+        )
+
+        $result = Install-AllowlistedTools -ManifestPath $manifestPath -RunContext $script:RunContext -DryRun
+
+        $result[0].SourcePath | Should Match 'ToolkitPrograms\\AutoInstall'
+    }
+
+    It 'marks portable allowlisted tools as prepared without launching them' {
+        $manifestPath = Join-Path $script:ManifestFixtureRoot 'portable-tool.json'
+        New-TestManifest -Path $manifestPath -Tools @(
+            @{
+                Name = 'PortableTool'
+                SourceFile = (Join-Path $script:InstallerFixtureRelativeRoot 'test-tool.exe')
+                InstallArguments = @()
+                InstallMode = 'Portable'
+                AutoInstall = $true
+            }
+        )
+
+        $result = Install-AllowlistedTools -ManifestPath $manifestPath -RunContext $script:RunContext
+
+        @($result).Count | Should Be 1
+        $result[0].Status | Should Be 'Prepared'
+        $result[0].ExitCode | Should Be $null
     }
 }

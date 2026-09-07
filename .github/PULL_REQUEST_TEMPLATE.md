@@ -5,7 +5,8 @@ Describe the change and the problem it solves.
 ## Verification
 
 - [ ] `Invoke-Pester -Script .\Tests -PassThru`
-- [ ] `.\Start-Diagnose.ps1 -DryRun -OutputRoot .\PRDryRunOutput`
+- [ ] `.\Start-Diagnose.ps1 -DryRun -InstallTools -RunStressTests -RunBenchmarks -RunSupportTools -OutputRoot .\PRDryRunOutput`
+- [ ] `.\Create-Distributions.ps1`
 
 ## Safety Review
 
@@ -13,6 +14,7 @@ Describe the change and the problem it solves.
 - [ ] No destructive automation added
 - [ ] No automatic packet capture added
 - [ ] New tools are documented and justified
+- [ ] README, docs, and Word documentation are aligned
 
 ## Notes
 

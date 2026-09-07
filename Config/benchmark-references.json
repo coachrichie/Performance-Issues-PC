@@ -1,0 +1,151 @@
+{
+  "Metadata": {
+    "CuratedFor": "ITSupportTriage",
+    "RetrievedOn": "2026-07-29",
+    "Notes": [
+      "Use local, versioned references for support triage instead of live internet lookups.",
+      "Compare only scores from the same benchmark test variant.",
+      "PCMark 10 thresholds below are curated from official UL guidance.",
+      "Unigine Heaven is included as a source-backed placeholder until local export samples define support thresholds."
+    ]
+  },
+  "Sources": [
+    {
+      "Id": "ul-good-score",
+      "Vendor": "UL Benchmarks",
+      "Url": "https://benchmarks.ul.com/resources/what-is-a-good-pcmark-10-score",
+      "RetrievedOn": "2026-07-29",
+      "AppliesTo": [
+        "PCMark10:Essentials",
+        "PCMark10:Productivity",
+        "PCMark10:DigitalContentCreation"
+      ],
+      "Notes": [
+        "UL guidance for what counts as a good PCMark 10 score in modern office use.",
+        "Use as triage thresholds, not as exact model-specific expectations."
+      ]
+    },
+    {
+      "Id": "ul-results-screen",
+      "Vendor": "UL Benchmarks",
+      "Url": "https://support.benchmarks.ul.com/support/solutions/articles/44002160223-results-screen",
+      "RetrievedOn": "2026-07-29",
+      "AppliesTo": [
+        "PCMark10"
+      ],
+      "Notes": [
+        "Only compare scores from the same PCMark 10 test.",
+        "Professional Edition supports PDF and XML result export."
+      ]
+    },
+    {
+      "Id": "unigine-heaven-product",
+      "Vendor": "UNIGINE",
+      "Url": "https://benchmark.unigine.com/heaven?lang=index.php",
+      "RetrievedOn": "2026-07-29",
+      "AppliesTo": [
+        "UnigineHeaven:Score"
+      ],
+      "Notes": [
+        "Official product page confirms command line automation and CSV reports.",
+        "Commercial use depends on the selected edition and license."
+      ]
+    }
+  ],
+  "TriageThresholds": [
+    {
+      "Name": "PCMark10:Essentials",
+      "Category": "System",
+      "MinimumRecommended": 4100,
+      "Unit": "score",
+      "SourceId": "ul-good-score",
+      "Use": "TriageThreshold"
+    },
+    {
+      "Name": "PCMark10:Productivity",
+      "Category": "System",
+      "MinimumRecommended": 4500,
+      "Unit": "score",
+      "SourceId": "ul-good-score",
+      "Use": "TriageThreshold"
+    },
+    {
+      "Name": "PCMark10:DigitalContentCreation",
+      "Category": "System",
+      "MinimumRecommended": 3450,
+      "Unit": "score",
+      "SourceId": "ul-good-score",
+      "Use": "TriageThreshold"
+    },
+    {
+      "Name": "UnigineHeaven:Score",
+      "Category": "GPU",
+      "Status": "NeedsLocalBaseline",
+      "Unit": "score",
+      "SourceId": "unigine-heaven-product",
+      "Use": "AwaitingLocalBaseline"
+    }
+  ],
+  "Benchmarks": [
+    {
+      "Metric": "WinSAT:CPUScore",
+      "Source": "WinSAT",
+      "Category": "CPU",
+      "DisplayName": "CPU WinSAT",
+      "Unit": "score",
+      "Minimum": 5.5,
+      "ExpectedLow": 7.0,
+      "ExpectedHigh": 9.9
+    },
+    {
+      "Metric": "WinSAT:MemoryScore",
+      "Source": "WinSAT",
+      "Category": "RAM",
+      "DisplayName": "RAM WinSAT",
+      "Unit": "score",
+      "Minimum": 5.0,
+      "ExpectedLow": 6.5,
+      "ExpectedHigh": 9.9
+    },
+    {
+      "Metric": "WinSAT:DiskScore",
+      "Source": "WinSAT",
+      "Category": "Storage",
+      "DisplayName": "Storage WinSAT",
+      "Unit": "score",
+      "Minimum": 5.0,
+      "ExpectedLow": 6.0,
+      "ExpectedHigh": 9.9
+    },
+    {
+      "Metric": "PCMark10:Essentials",
+      "Source": "PCMark10",
+      "Category": "System",
+      "DisplayName": "PCMark 10 Essentials",
+      "Unit": "score",
+      "Minimum": 4100,
+      "ExpectedLow": 4100,
+      "ExpectedHigh": 20000
+    },
+    {
+      "Metric": "PCMark10:Productivity",
+      "Source": "PCMark10",
+      "Category": "System",
+      "DisplayName": "PCMark 10 Productivity",
+      "Unit": "score",
+      "Minimum": 4500,
+      "ExpectedLow": 4500,
+      "ExpectedHigh": 20000
+    },
+    {
+      "Metric": "PCMark10:DigitalContentCreation",
+      "Source": "PCMark10",
+      "Category": "System",
+      "DisplayName": "PCMark 10 Digital Content Creation",
+      "Unit": "score",
+      "Minimum": 3450,
+      "ExpectedLow": 3450,
+      "ExpectedHigh": 20000
+    }
+  ]
+}
