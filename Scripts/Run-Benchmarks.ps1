@@ -206,6 +206,13 @@ function Invoke-ConfiguredBenchmarks {
     )
 
     $records = [System.Collections.Generic.List[object]]::new()
+
+    if ($DryRun) {
+        $records.Add((Get-BenchmarkAutomationRecord -RunContext $RunContext -Name 'PCMark10' -Value 'DryRun' -Message 'Benchmark executable discovery skipped in dry run'))
+        $records.Add((Get-BenchmarkAutomationRecord -RunContext $RunContext -Name 'UnigineHeaven' -Value 'DryRun' -Message 'Benchmark executable discovery skipped in dry run'))
+        return $records
+    }
+
     $importRoots = Get-ConfiguredBenchmarkImportRoots
 
     $pcMarkConfig = Get-BenchmarkToolConfig -ToolName 'PCMark 10'

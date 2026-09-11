@@ -40,4 +40,11 @@ App2,Vendor,Verified
         ($records | Where-Object Name -eq 'ProcessExplorer:Run').Value | Should Be 'DryRun'
         ($records | Where-Object Name -eq 'ProcessMonitor:Run').Value | Should Be 'DryRun'
     }
+
+    It 'skips executable discovery during a dry-run' {
+        Mock Get-SupportToolExecutable { throw 'Executable discovery should not run during dry-run' }
+        $context = New-RunContext -OutputRoot (Join-Path $TestDrive 'support-tools-fast')
+
+        { Invoke-SupportTools -RunContext $context -DryRun } | Should Not Throw
+    }
 }
