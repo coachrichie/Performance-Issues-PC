@@ -1,5 +1,9 @@
 # PC Performance Diagnostics
 
+![Validation](https://github.com/coachrichie/Performance-Issues-PC/actions/workflows/validate.yml/badge.svg?branch=main)
+
+Portable, safety-first Windows performance triage for IT support teams. Collect a repeatable evidence bundle, compare benchmark signals, and hand off both a concise customer summary and a technical evaluation.
+
 Portable Windows toolkit for IT support triage of performance issues on Windows 10 and Windows 11 x64 clients. The toolkit can install approved diagnostics, launch built-in and third-party checks, collect logs, and create both a management-friendly summary and a technical raw evaluation.
 
 ## Main Support Workflow
@@ -21,6 +25,24 @@ Important:
 - The toolkit does not capture or store an administrator password.
 - Windows decides the UAC prompt flow; the toolkit does not bypass it.
 - In the current build, live stress execution remains safely bounded and can still be skipped if no trustworthy sensor path is available.
+
+## Showcase
+
+The toolkit is designed for a support handoff that is useful at a glance and still auditable by an engineer:
+
+| Input | Output | Why it helps |
+| --- | --- | --- |
+| Windows, storage, network, benchmark, and support-tool signals | `Abschlussbericht.html` | A short triage summary for the customer or service desk |
+| Raw collector records and logs | `Rohbewertung.html` | Technical detail for escalation and root-cause analysis |
+| Reports, logs, and normalized records | `Run.zip` | A portable evidence bundle for ticket attachment |
+
+Run a dry-run first to preview the workflow without installing tools or changing the system:
+
+```powershell
+.\Start-Diagnose.ps1 -DryRun -OutputRoot .\ReadmeValidationOutput
+```
+
+For a complete handoff package, use `Create-Distributions.ps1`; the generated `Distributions\Customer Toolkit\` folder is the customer-facing artifact and `Distributions\GitHub Repository\` is the publication-ready copy.
 
 ## Deliverables Per Run
 
