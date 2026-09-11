@@ -1,4 +1,5 @@
 . "$PSScriptRoot/../Scripts/Common.ps1"
+. "$PSScriptRoot/../Scripts/Collect-Benchmarks.ps1"
 . "$PSScriptRoot/../Scripts/Run-Benchmarks.ps1"
 
 Describe 'benchmark automation' {
@@ -45,5 +46,16 @@ Describe 'benchmark automation' {
         $records = Invoke-BenchmarkAutomationPlan -RunContext $context -Plan $plan -DryRun
 
         ($records | Where-Object Name -eq 'PCMark10').Value | Should Be 'DryRun'
+    }
+
+    It 'does not scan global program folders during a dry-run' {
+        $context = New-RunContext -OutputRoot (Join-Path $TestDrive 'benchmark-dry-run')
+        $watch = [System.Diagnostics.Stopwatch]::StartNew()
+
+        $records = Invoke-ConfiguredBenchmarks -RunContext $context -DryRun
+
+        $watch.Stop()
+        $watch.Elapsed.TotalSeconds | Should BeLessThan 5
+        @($records).Count | Should BeGreaterThan 0
     }
 }
