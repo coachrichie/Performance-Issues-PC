@@ -136,6 +136,14 @@ function Invoke-SupportTools {
 
     $records = [System.Collections.Generic.List[object]]::new()
 
+    if ($DryRun) {
+        $records.Add((Get-SupportToolRecord -RunContext $RunContext -Name 'CrystalDiskInfo:Run' -Value 'DryRun' -Message 'CrystalDiskInfo execution skipped in dry run'))
+        $records.Add((Get-SupportToolRecord -RunContext $RunContext -Name 'Autoruns:Run' -Value 'DryRun' -Message 'Autoruns execution skipped in dry run'))
+        $records.Add((Get-SupportToolRecord -RunContext $RunContext -Name 'ProcessExplorer:Run' -Value 'DryRun' -Message 'Process Explorer launch skipped in dry run'))
+        $records.Add((Get-SupportToolRecord -RunContext $RunContext -Name 'ProcessMonitor:Run' -Value 'DryRun' -Message 'Process Monitor launch skipped in dry run'))
+        return $records
+    }
+
     $crystalPath = Get-SupportToolExecutable -ToolName 'CrystalDiskInfo' -ExecutableHints @('DiskInfo64.exe', 'DiskInfo32.exe', 'DiskInfo.exe')
     if ($DryRun) {
         $records.Add((Get-SupportToolRecord -RunContext $RunContext -Name 'CrystalDiskInfo:Run' -Value 'DryRun' -Message 'CrystalDiskInfo execution skipped in dry run'))
